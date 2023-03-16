@@ -16,6 +16,9 @@ import {
   IoMdVolumeLow,
 } from 'react-icons/io';
 
+
+import { FaPlay, FaPause, FaFastBackward, FaFastForward, FaStepBackward, FaStepForward, FaVolumeDown, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+
 const Controls = ({
   audioRef,
   progressBarRef,
@@ -110,33 +113,33 @@ const Controls = ({
   }, [volume, audioRef, muteVolume]);
 
   return (
-    <div className="flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
-      <div className="flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
-        <button onClick={handlePrevious}>
-          <IoPlaySkipBackSharp />
+    <div className="flex items-center justify-between md:w-36 lg:w-52 2xl:w-80 my-2">
+      <div className="flex items-center justify-between md:w-36 lg:w-52 2xl:w-80">
+        <button onClick={handlePrevious} >
+          <FaStepBackward />
         </button>
         <button onClick={skipBackward}>
-          <IoPlayBackSharp />
+          <FaFastBackward />
         </button>
 
         <button onClick={togglePlayPause}>
-          {isPlaying ? <IoPauseSharp /> : <IoPlaySharp />}
+          {isPlaying ? <FaPause /> : <FaPlay />}
         </button>
         <button onClick={skipForward}>
-          <IoPlayForwardSharp />
+          <FaFastForward />
         </button>
         <button onClick={handleNext}>
-          <IoPlaySkipForwardSharp />
+          <FaStepForward />
         </button>
       </div>
       <div className="volume">
         <button onClick={() => setMuteVolume((prev) => !prev)}>
           {muteVolume || volume < 5 ? (
-            <IoMdVolumeOff />
+            <FaVolumeMute />
           ) : volume < 40 ? (
-            <IoMdVolumeLow />
+            <FaVolumeDown />
           ) : (
-            <IoMdVolumeHigh />
+            <FaVolumeUp />
           )}
         </button>
         <input

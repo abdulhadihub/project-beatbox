@@ -22,7 +22,7 @@ const ProgressBar = ({
   };
 
   return (
-    <div className="progress">
+    <div className="progress mb-4">
       <span className="text-white">{formatTime(timeProgress)}</span>
       <input
         type="range"
