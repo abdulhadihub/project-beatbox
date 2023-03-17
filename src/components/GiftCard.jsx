@@ -1,14 +1,41 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import cardImage from '../assets/giftcard.webp'
 import 'tw-elements';
+import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from '../firebase-config'
 
-function GiftCard() {
-    const [unRedeemed, setRedeemed] = React.useState("group object-scale-down h-full w-96  blur-[1px] opacity-75 ")
+function GiftCard({ cost, isRedeemed, code, points, updatePoints, user }) {
+    // const [unRedeemed, setRedeemed] = React.useState("group object-scale-down h-full w-96  blur-[1px] opacity-75 ")
     const [redeemBtn, setRedeemBtn] = React.useState("absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 object-center hidden group-hover:block bg-black bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded")
-    const redeem = () => {
-        setRedeemed(unRedeemed + "blur-none opacity-100")
-        setRedeemBtn("hidden")
+    const [transactionStatus, setTransactionStatus] = React.useState(false);
+
+    const updatePointsFireStore = async (user, points) => {
+        try {
+            const userRef = doc(db, "listener", user.uid);
+            await updateDoc(userRef, {
+                points: points,
+            });
+        }
+        catch (e) {
+            alert("Error updating points: ", e);
+        }
     }
+
+
+    const redeem = () => {
+        if (points >= cost) {
+            points = points - cost;
+            updatePointsFireStore(user, points);
+            updatePoints(points);
+            setTransactionStatus(true);
+            setRedeemBtn("hidden")
+        }
+        else {
+            alert("You don't have enough points to redeem this gift card")
+            return;
+        }
+    }
+
 
     const copyText = () => {
         var copyText = document.getElementById("coupon-code");
@@ -16,6 +43,8 @@ function GiftCard() {
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value)
     }
+
+    let cardClass = isRedeemed ? "group object-scale-down h-full w-96 opacity-100" : "group object-scale-down h-full w-96  blur-[1px] opacity-75";
 
     return (
         <>
@@ -59,7 +88,7 @@ function GiftCard() {
                             </button>
                         </div>
                         <div className="relative p-4">
-                            <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500" id="coupon-code" type="text" value="AMAZON2023" />
+                            <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500" id="coupon-code" type="text" value={code} />
 
                         </div>
                         <div
@@ -84,9 +113,11 @@ function GiftCard() {
                     </div>
                 </div>
             </div>
+
             <div className=" w-1/5 group relative hover:shadow-lg">
 
-                <img className={unRedeemed} alt='gift_card_image' src={cardImage} />
+                <img className={cardClass} alt='gift_card_image' src={cardImage} />
+                <h2 class={"text-lg font-bold text-white mb-2 text-center"}>{`${cost} points`}</h2>
                 <button data-te-toggle="modal"
                     data-te-target="#exampleModalCenter" onClick={redeem} className={redeemBtn}>Redeem</button>
             </div>

@@ -5,7 +5,7 @@ import DisplayTrack from './DisplayTrack';
 import Controls from './Controls';
 import ProgressBar from './ProgressBar';
 
-const AudioPlayer = ({ songsData, isFetchingData }) => {
+const AudioPlayer = ({ songsData, isFetchingData, user }) => {
 
 
   // states
@@ -54,6 +54,7 @@ const AudioPlayer = ({ songsData, isFetchingData }) => {
               setTrackIndex,
               setCurrentTrack,
               handleNext,
+              user
             }}
           />
           <ProgressBar

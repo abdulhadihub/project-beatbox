@@ -5,6 +5,7 @@ import { auth } from '../../firebase-config';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 import { db } from '../../firebase-config'
+import voucher_codes from 'voucher-code-generator';
 
 const Register = ({ loginUser }) => {
     const [user, setUser] = useState({});
@@ -13,6 +14,12 @@ const Register = ({ loginUser }) => {
     const [checked, setChecked] = useState(false);
     const [fullName, setFullName] = useState('');
     const navigate = useNavigate();
+    const couponCodes = voucher_codes.generate({
+        length: 8,
+        count: 8,
+        prefix: "AMAZON-",
+        postfix: "-2023"
+    });
 
     const addUser = async (user) => {
         try {
@@ -30,6 +37,48 @@ const Register = ({ loginUser }) => {
                     email: user.email,
                     name: fullName,
                     points: 0,
+                    giftCards: [
+                        {
+                            couponCode: couponCodes[0],
+                            cost: 300,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[1],
+                            cost: 600,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[2],
+                            cost: 900,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[3],
+                            cost: 1200,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[4],
+                            cost: 1500,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[5],
+                            cost: 1800,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[6],
+                            cost: 2100,
+                            isRedeemed: false,
+                        },
+                        {
+                            couponCode: couponCodes[7],
+                            cost: 2400,
+                            isRedeemed: false,
+                        },
+                    ],
                 };
                 await setDoc(doc(db, "listener", user.uid), data);
             }

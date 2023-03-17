@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Error, Loader } from '../components';
 import GiftCard from '../components/GiftCard';
 
 const Rewards = ({ userData }) => {
     const name = userData?.name
-    const points = userData?.points
+    const [points, setPoints] = useState(userData?.points);
+
+    const updatePoints = (points) => {
+        setPoints(points);
+    };
+
+    useEffect(() => { }, [points]);
 
     if (false) return <Loader title="Loading artists..." />;
+    console.log(userData)
 
     // if (error) return <Error />;
+
 
     return (
         <div className="flex flex-col">
@@ -19,14 +27,17 @@ const Rewards = ({ userData }) => {
             <h2 className="font-bold text-2xl text-white text-left mb-10">with your {points} points you can redeem</h2>
 
             <div className="flex flex-wrap flex-row sm:justify-start justify-center gap-8 mt-10">
-                <GiftCard />
-                <GiftCard />
-                <GiftCard />
-                <GiftCard />
-                <GiftCard />
-                <GiftCard />
-                <GiftCard />
-                <GiftCard />
+                {userData.giftCards?.map((giftCard, i) => (
+                    <GiftCard
+                        key={i}
+                        code={giftCard.couponCode}
+                        cost={giftCard.cost}
+                        isRedeemed={giftCard.isRedeemed}
+                        points={points}
+                        updatePoints={updatePoints}
+                        user={userData}
+                    />
+                ))}
             </div>
         </div>
     );

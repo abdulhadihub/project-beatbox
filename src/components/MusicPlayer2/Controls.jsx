@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from '../../firebase-config'
 
 // icons
 import {
@@ -29,36 +31,63 @@ const Controls = ({
   setTrackIndex,
   setCurrentTrack,
   handleNext,
+  user,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(60);
   const [muteVolume, setMuteVolume] = useState(false);
-  const pointsPerSec = 0.166666;
-  const [points, setPoints] = useState(0);
-  const [totalPoints, setTotalPoints] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const [points, setPoints] = useState(user?.points);
 
   const togglePlayPause = () => {
     setIsPlaying((prev) => !prev);
   };
 
+  const updatePointsFireStore = async (user, points) => {
+    try {
+      const userRef = doc(db, "listener", user.uid);
+      await updateDoc(userRef, {
+        points: points,
+      });
+    }
+    catch (e) {
+      alert("Error updating points: ", e);
+    }
+  }
+
   useEffect(() => {
+    let isSeeking = false; // initialize isSeeking to false
     if (audioRef.current) {
       const updatePoints = () => {
+        if (isSeeking || muteVolume) { // check if the user is seeking
+          return;
+        }
         const currentTime = audioRef.current.currentTime;
-        setPoints(Math.floor(currentTime * pointsPerSec));
+        const timer = Math.floor(currentTime / 6);
+        setTimer(timer)
       };
       audioRef.current.addEventListener('timeupdate', updatePoints);
+      audioRef.current.addEventListener('seeking', () => {
+        isSeeking = true; // set isSeeking to true when the user is seeking
+      });
+      audioRef.current.addEventListener('seeked', () => {
+        isSeeking = false; // set isSeeking back to false when the user is done seeking
+      });
       return () => {
         if (audioRef.current) {
           audioRef.current.removeEventListener('timeupdate', updatePoints);
+          audioRef.current.removeEventListener('seeking', () => { });
+          audioRef.current.removeEventListener('seeked', () => { });
         }
       };
     }
-  }, [audioRef, pointsPerSec]);
+  }, [audioRef, muteVolume]);
 
   useEffect(() => {
+    setPoints(prev => prev + 1);
+    updatePointsFireStore(user, points);
     console.log("Congratulations! You have earned " + points + " points");
-  }, [points]);
+  }, [timer]);
 
 
 
