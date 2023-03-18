@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from '../../firebase-config'
+import { PointsContext } from '../context/PointsContext';
 
 // icons
 import {

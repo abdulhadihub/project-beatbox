@@ -15,10 +15,10 @@ const Register = ({ loginUser }) => {
     const [fullName, setFullName] = useState('');
     const navigate = useNavigate();
     const couponCodes = voucher_codes.generate({
-        length: 8,
+        length: 5,
         count: 8,
-        prefix: "AMAZON-",
-        postfix: "-2023"
+        prefix: "AMZ-",
+        postfix: "-23"
     });
 
     const addUser = async (user) => {
@@ -36,7 +36,7 @@ const Register = ({ loginUser }) => {
                 data = {
                     email: user.email,
                     name: fullName,
-                    points: 0,
+                    points: 1,
                     giftCards: [
                         {
                             couponCode: couponCodes[0],

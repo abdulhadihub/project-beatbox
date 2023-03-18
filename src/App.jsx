@@ -14,6 +14,8 @@ import { db } from './firebase-config'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
 import { getApp } from 'firebase/app'
 import { getFirestore } from "firebase/firestore";
+import { PointsContext } from './components/context/PointsContext';
+
 
 const App = () => {
   const { activeSong } = useSelector((state) => state.player);
@@ -22,6 +24,7 @@ const App = () => {
   const [userData, setUserData] = useState(null);
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [songsData, setSongsData] = useState([]);
+  const [points, setPoints] = useState(userData?.points);
 
   const loginUser = (userInfo) => {
     setUser(userInfo);
@@ -56,7 +59,7 @@ const App = () => {
       return null;
     }
   }
-  // function to get All Artists data
+  // functionw to get All Artists data
   // const getArtistData = async () => {
   //   setIsFetchingData(true);
   //   const artistSnapshot = await getDocs(collection(db, "artist"));
@@ -70,6 +73,7 @@ const App = () => {
 
   useEffect(() => {
     getSongsData();
+
   }, []);
 
   const getUser = async (user) => {
@@ -83,6 +87,10 @@ const App = () => {
     if (docSnapListener.exists() || docSnapArtist.exists()) {
       const data = { ...docSnapListener.data(), ...docSnapArtist.data() }
       setUserData({ ...data, uid: user.uid });
+      if (data?.points) {
+        setPoints(userData?.points);
+
+      }
     } else {
       alert("No such Data!");
     }
@@ -94,7 +102,6 @@ const App = () => {
       getUser(user);
     }
   }, [user]);
-
   const isArtist = userData?.points === undefined;
 
 
@@ -103,43 +110,45 @@ const App = () => {
   const shouldRenderAudioPlayer = !isArtist;
 
   return (
-    <div className="relative flex">
-      <Sidebar isArtist={isArtist} />
-      <div className={`flex-1 flex flex-col ${isArtist ? 'bg-slate-200' : 'bg-gradient-to-br from-[#49a09d] to-[#5f2c82]'}`}>
-        {/* <Searchbar /> */}
+    <PointsContext.Provider value={{ points, setPoints }}>
+      <div className="relative flex">
+        <Sidebar isArtist={isArtist} />
+        <div className={`flex-1 flex flex-col ${isArtist ? 'bg-slate-200' : 'bg-gradient-to-br from-[#49a09d] to-[#5f2c82]'}`}>
+          {/* <Searchbar /> */}
 
-        <div className="px-6 h-[calc(100vh)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
-          <div className="flex-1 h-fit pb-40">
-            <Routes>
-              <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} />} />
-              <Route path="/login" element={<Landing loginUser={loginUser} />} />
-              <Route path="/upcoming-artists" element={<UpcomingArtists songsData={songsData} />} />
-              <Route path="/rewards" element={<Rewards userData={userData} />} />
-              <Route path="/account" element={<Account isArtist={isArtist} />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/addSong" element={<ArtistAddSong userData={userData} />} />
-              <Route path="/top-artists" element={<TopArtists />} />
-              <Route path="/top-charts" element={<TopCharts />} />
-              <Route path="/around-you" element={<AroundYou />} />
-              <Route path="/artists/:id" element={<ArtistDetails />} />
-              <Route path="/songs/:songid" element={<SongDetails />} />
-              <Route path="/search/:searchTerm" element={<Search />} />
-            </Routes>
-          </div>
-          <div className="xl:sticky relative top-0 h-fit">
-            {/* <TopPlay /> */}
+          <div className="px-6 h-[calc(100vh)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
+            <div className="flex-1 h-fit pb-40">
+              <Routes>
+                <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} />} />
+                <Route path="/login" element={<Landing loginUser={loginUser} />} />
+                <Route path="/upcoming-artists" element={<UpcomingArtists songsData={songsData} />} />
+                <Route path="/rewards" element={<Rewards userData={userData} />} />
+                <Route path="/account" element={<Account isArtist={isArtist} />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/addSong" element={<ArtistAddSong userData={userData} />} />
+                <Route path="/top-artists" element={<TopArtists />} />
+                <Route path="/top-charts" element={<TopCharts />} />
+                <Route path="/around-you" element={<AroundYou />} />
+                <Route path="/artists/:id" element={<ArtistDetails />} />
+                <Route path="/songs/:songid" element={<SongDetails />} />
+                <Route path="/search/:searchTerm" element={<Search />} />
+              </Routes>
+            </div>
+            <div className="xl:sticky relative top-0 h-fit">
+              {/* <TopPlay /> */}
+            </div>
           </div>
         </div>
-      </div>
-      {shouldRenderAudioPlayer && (
-        <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
-          <AudioPlayer songsData={songsData} isFetchingData={isFetchingData} user={userData} />
-          {/* <MusicPlayer /> */}
-        </div>
-      )}
-      {/* {activeSong?.title && (
+        {shouldRenderAudioPlayer && (
+          <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
+            <AudioPlayer songsData={songsData} isFetchingData={isFetchingData} user={userData} />
+            {/* <MusicPlayer /> */}
+          </div>
+        )}
+        {/* {activeSong?.title && (
       )} */}
-    </div>
+      </div>
+    </PointsContext.Provider>
   );
 };
 

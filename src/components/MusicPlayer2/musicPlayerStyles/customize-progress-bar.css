@@ -80,6 +80,10 @@ input[type="range"]:active::-moz-range-thumb {
   transform: scale(1.2);
 }
 
-/* button {
+button {
   margin: 0 10px;
-} */
+}
+
+.volume {
+  display: none !important;
+}
