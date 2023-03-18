@@ -6,10 +6,8 @@ import { db } from '../firebase-config'
 import Modal from '../components/Modal';
 
 function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i }) {
-    // const [unRedeemed, setRedeemed] = React.useState("group object-scale-down h-full w-96  blur-[1px] opacity-75 ")
 
-    useEffect(() => {
-    }, [points, isRedeemed])
+
 
     const updatePointsFireStore = async (user, points, index) => {
         try {

@@ -13,8 +13,7 @@ const Rewards = ({ userData }) => {
         setPoints(points);
     };
 
-    useEffect(() => {
-    }, [points, setPoints]);
+
 
     if (false) return <Loader title="Loading artists..." />;
 

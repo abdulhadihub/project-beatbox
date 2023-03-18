@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { collection, addDoc, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
-import { db } from '../firebase-config'
 
 function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireStore, updatePoints }) {
   const [showModal, setShowModal] = useState(false);
@@ -23,6 +21,11 @@ function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireSto
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(copyText.value)
+  }
+
+  const handleClose = () => {
+    setShowModal(false);
+    window.location.reload();
   }
 
   return (
@@ -52,7 +55,7 @@ function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireSto
                 </div>
               </div>
               <div className="mt-5 sm:mt-6 flex justify-end">
-                <button onClick={() => setShowModal(false)} className="mr-4 inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-500 text-base hover:bg-red-700 font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm">
+                <button onClick={handleClose} className="mr-4 inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-500 text-base hover:bg-red-700 font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm">
                   Close
                 </button>
                 <button onClick={handleCopyCode} className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-500 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm">

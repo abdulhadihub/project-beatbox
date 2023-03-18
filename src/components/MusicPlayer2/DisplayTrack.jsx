@@ -22,7 +22,7 @@ const DisplayTrack = ({
         onLoadedMetadata={onLoadedMetadata}
         onEnded={handleNext}
       />
-      <div className="text-center">
+      <div className="text-center mt-4">
         <div className="truncate text-gray-300">
           <p className="truncate text-white font-bold text-lg">{currentTrack.title}</p>
           <p>{currentTrack.artist}</p>

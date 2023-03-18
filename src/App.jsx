@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Searchbar, Sidebar, MusicPlayer, TopPlay, Loader } from './components';
 import { ArtistDetails, TopArtists, AroundYou, Discover, Search, SongDetails, TopCharts, Rewards, Account, Logout } from './pages';
 import UpcomingArtists from './pages/UpcomingArtists';
@@ -24,7 +24,7 @@ const App = () => {
   const [userData, setUserData] = useState(null);
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [songsData, setSongsData] = useState([]);
-  const [points, setPoints] = useState(userData?.points);
+  const [points, setPoints] = useState(0);
 
   const loginUser = (userInfo) => {
     setUser(userInfo);
@@ -76,6 +76,11 @@ const App = () => {
 
   }, []);
 
+  useEffect(() => {
+
+    setPoints(userData?.points);
+  }, [userData]);
+
   const getUser = async (user) => {
     setIsFetchingData(true);
     const docRefListener = doc(db, "listener", user.uid);
@@ -84,16 +89,17 @@ const App = () => {
     const docRefArtist = doc(db, "artist", user.uid);
     const docSnapArtist = await getDoc(docRefArtist);
 
-    if (docSnapListener.exists() || docSnapArtist.exists()) {
-      const data = { ...docSnapListener.data(), ...docSnapArtist.data() }
-      setUserData({ ...data, uid: user.uid });
-      if (data?.points) {
-        setPoints(userData?.points);
+    Promise.all([docSnapListener, docSnapArtist]).then(() => {
 
+      if (docSnapListener.exists() || docSnapArtist.exists()) {
+        const data = { ...docSnapListener.data(), ...docSnapArtist.data() }
+        setUserData({ ...data, uid: user.uid });
+      } else {
+        alert("No such Data!");
+        const navigate = useNavigate();
+        navigate('/login')
       }
-    } else {
-      alert("No such Data!");
-    }
+    }).catch((error) => alert(error.message));
     setIsFetchingData(false);
   }
 
