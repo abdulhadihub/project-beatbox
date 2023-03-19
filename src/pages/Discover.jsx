@@ -5,6 +5,7 @@ import { Error, Loader, SongCard } from '../components';
 import { selectGenreListId } from '../redux/features/playerSlice';
 import { useGetSongsByGenreQuery } from '../redux/services/shazamCore';
 
+
 const Discover = ({ songsData }) => {
   const dispatch = useDispatch();
   const { genreListId } = useSelector((state) => state.player);
@@ -26,7 +27,6 @@ const Discover = ({ songsData }) => {
           <SongCard
             key={i}
             song={song}
-            isPlaying={isPlaying}
             activeSong={activeSong}
             i={i}
           />

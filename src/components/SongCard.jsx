@@ -1,27 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
+import { SongContext } from '../components/context/SongContext';
 
-const SongCard = ({ song, isPlaying, activeSong, datajson, i }) => {
+const SongCard = ({ song, activeSong, datajson, i }) => {
   const dispatch = useDispatch();
+  const { trackIndex, setTrackIndex } = useContext(SongContext);
+  const { isPlaying, setIsPlaying } = useContext(SongContext);
 
   const handlePauseClick = () => {
-    // dispatch(playPause(false));
+    setIsPlaying(false);
   };
 
   const handlePlayClick = () => {
-    // dispatch(setActiveSong({ song, datajson, i }));
-    // dispatch(playPause(true));
+    setTrackIndex(i);
+    setIsPlaying(true);
   };
 
   return (
     <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
       <div className="relative w-full h-56 group">
-        <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
-          <PlayPause />
+        <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${i === trackIndex ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
+          <PlayPause isPlaying={isPlaying} handlePlay={handlePlayClick} handlePause={handlePauseClick} i={i} trackIndex={trackIndex} />
         </div>
         <img alt="song_img" src={song.coverArt} className="w-full h-full rounded-lg" />
       </div>

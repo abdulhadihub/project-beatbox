@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from '../../firebase-config'
 import { PointsContext } from '../context/PointsContext';
+import { SongContext } from '../context/SongContext';
 
 // icons
 import {
@@ -34,7 +35,8 @@ const Controls = ({
   handleNext,
   user,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
+  const { isPlaying, setIsPlaying } = useContext(SongContext);
   const [volume, setVolume] = useState(60);
   const [muteVolume, setMuteVolume] = useState(false);
   const [timer, setTimer] = useState(0);

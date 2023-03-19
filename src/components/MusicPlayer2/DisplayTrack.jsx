@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BsMusicNoteBeamed } from 'react-icons/bs';
 
 const DisplayTrack = ({
@@ -12,6 +13,8 @@ const DisplayTrack = ({
     setDuration(seconds);
     progressBarRef.current.max = seconds;
   };
+
+
 
 
   return (

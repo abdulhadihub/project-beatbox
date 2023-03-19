@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useRef, useState, useContext } from 'react';
+import { SongContext } from '../context/SongContext';
 // import components
 import DisplayTrack from './DisplayTrack';
 import Controls from './Controls';
@@ -9,7 +9,8 @@ const AudioPlayer = ({ songsData, isFetchingData, user }) => {
 
 
   // states
-  const [trackIndex, setTrackIndex] = useState(0);
+  // const [trackIndex, setTrackIndex] = useState(0);
+  const { trackIndex, setTrackIndex } = useContext(SongContext);
   const [currentTrack, setCurrentTrack] = useState(
     songsData[trackIndex]
   );
@@ -29,6 +30,10 @@ const AudioPlayer = ({ songsData, isFetchingData, user }) => {
       setCurrentTrack(songsData[trackIndex + 1]);
     }
   };
+
+  useEffect(() => {
+    setCurrentTrack(songsData[trackIndex]);
+  }, [trackIndex]);
 
   return (
     <>
