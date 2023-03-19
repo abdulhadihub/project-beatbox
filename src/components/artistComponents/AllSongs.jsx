@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { BiPencil } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 import { useNavigate } from "react-router-dom";
 import { db } from '../../firebase-config'
 import { collection, addDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { getStorage, ref, deleteObject } from "firebase/storage";
+import { getStorage, ref, deleteObject, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from '../../firebase-config'
 import Loader from '../Loader';
+import EditSongModal from './EditSongModal';
+import { v4 } from 'uuid';
 
 
 const AllSongs = ({ userData }) => {
     const [songs, setSongs] = useState([]);
-
+    const [imageUpload, setImageUpload] = useState(null);
+    const artistInputRef = useRef(null);
 
     useEffect(() => {
         if (userData?.songs) {
             setSongs(userData.songs);
         }
-
-
     }, [userData])
 
     const [loading, setLoading] = useState(false);
-
     const artistName = userData?.name;
+
 
 
     const deleteSong = async (index) => {
@@ -60,12 +61,55 @@ const AllSongs = ({ userData }) => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (imageUpload !== null) {
+            setLoading(true);
+            const imageRef = ref(storage, `images/artistImages/${imageUpload.name + v4()}`);
+            const imageUploadTask = uploadBytes(imageRef, imageUpload);
+
+            Promise.all([imageUploadTask]).then(async () => {
+                const imageURL = await getDownloadURL(imageRef);
+
+                try {
+                    const artistRef = doc(db, "artist", userData.uid);
+
+                    await updateDoc(artistRef, { image: imageURL });
+                    setLoading(false);
+                    alert("Profile image updated successfully");
+                    window.location.reload();
+                } catch (e) {
+                    setLoading(false);
+                    alert("Error updating profile image: ", e);
+                }
+            });
+        }
+    }, [imageUpload]);
+
+    const changeArtistImage = async () => {
+        artistInputRef.current.click();
+    }
+
     const handleClick = () => {
         navigate("/addSong");
     }
 
     if (!userData) {
-        return <button class="bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded " onClick={handleClick}>ADD NEW SONG</button>
+        return (
+            <div class="grid grid-cols-3 gap-2 items-center mt-6">
+                <div class="col-span-1">
+                    {userData && (
+                        <img class="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
+                    )}
+                </div>
+                <h3 class="col-span-1 text-lg font-bold text-center">Welcome <span class="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
+                <div class="col-span-1 flex justify-center">
+                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
+                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
+                    <input ref={artistInputRef} onChange={(e) => setImageUpload(e.target.files[0])} type='file' accept="image/*" className='hidden' />
+
+                </div>
+            </div>
+        )
             ;
     }
 
@@ -73,11 +117,19 @@ const AllSongs = ({ userData }) => {
 
     return (
         <div>
-            {loading && <Loader title={"Deleting"} />}
-            <div className='grid grid-cols-2 gap-4 mt-6'>
-                <h3 className='text-lg font-bold'>Welcome <span className='text-violet-800'>{artistName}</span>, here's the list of the songs uploaded</h3>
-                <div className='col-end-7'>
-                    <button class="bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded " onClick={handleClick}>ADD NEW SONG</button>
+            {loading && <Loader title={"Updating"} />}
+            <div class="grid grid-cols-3 gap-2 items-center mt-6">
+                <div class="col-span-1">
+                    {userData && (
+                        <img class="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
+                    )}
+                </div>
+                <h3 class="col-span-1 text-lg font-bold text-center">Welcome <span class="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
+                <div class="col-span-1 flex justify-center">
+                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
+                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
+                    <input ref={artistInputRef} onChange={(e) => setImageUpload(e.target.files[0])} type='file' accept="image/*" className='hidden' />
+
                 </div>
             </div>
 
@@ -100,7 +152,8 @@ const AllSongs = ({ userData }) => {
                                 <td className='text-center py-3 border-b-2 border-gray-400 p-2'><img className='h-[70px] w-[70px] mx-auto' src={song?.coverArt} alt="cover_art" /></td>
                                 <td className='text-center py-3 border-b-2 border-gray-400 p-2'>{song?.date}</td>
                                 <td className='text-center py-3 border-b-2 border-gray-400 p-2'>
-                                    {/* <button class=" text-cyan-300 hover:text-cyan-600 font-bold mx-6"><BiPencil size={30} /></button> */}
+                                    <EditSongModal song={song} i={index} userData={userData} setLoading={setLoading} />
+
                                     <button onClick={() => deleteSong(index)} class="text-red-500 hover:text-red-300 font-bold mx-6"><MdOutlineDeleteOutline size={30} /></button>
                                 </td>
                             </tr>

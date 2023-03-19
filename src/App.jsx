@@ -28,6 +28,7 @@ const App = () => {
   const [points, setPoints] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
+  const [artistData, setArtistData] = useState([]);
 
   const loginUser = (userInfo) => {
     setUser(userInfo);
@@ -39,10 +40,13 @@ const App = () => {
     try {
       const artistSnapshot = await getDocs(collection(db, "artist"));
       const songsData = [];
+      const artistData = [];
 
       artistSnapshot.forEach((doc) => {
         const artist = doc.data();
         const artistName = artist.name;
+        const artistImage = artist.image;
+        artistData.push({ name: artistName, image: artistImage });
 
         if (Array.isArray(artist.songs)) {
           artist.songs.forEach((song) => {
@@ -56,23 +60,13 @@ const App = () => {
 
       setIsFetchingData(false);
       setSongsData(songsData);
+      setArtistData(artistData);
     } catch (error) {
       console.error(error);
       setIsFetchingData(false);
       return null;
     }
-  }
-  // functionw to get All Artists data
-  // const getArtistData = async () => {
-  //   setIsFetchingData(true);
-  //   const artistSnapshot = await getDocs(collection(db, "artist"));
-  //   artistSnapshot.forEach((doc) => {
-  //     artistDataArr.push(doc.data());
-  //   });
-  //   setArtistData(artistDataArr);
-  //   getSongsData();
-  //   setIsFetchingData(false);
-  // }
+  };
 
   useEffect(() => {
     getSongsData();
@@ -132,7 +126,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} />} />
                   <Route path="/login" element={<Landing loginUser={loginUser} />} />
-                  <Route path="/upcoming-artists" element={<UpcomingArtists songsData={songsData} />} />
+                  <Route path="/upcoming-artists" element={<UpcomingArtists artistData={artistData} />} />
                   <Route path="/rewards" element={<Rewards userData={userData} />} />
                   <Route path="/account" element={<Account isArtist={isArtist} />} />
                   <Route path="/logout" element={<Logout />} />

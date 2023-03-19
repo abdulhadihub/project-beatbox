@@ -4,10 +4,12 @@ import { ArtistCard, Error, Loader } from '../components';
 import { useGetTopChartsQuery } from '../redux/services/shazamCore';
 import datajson from '../assets/data';
 
-const UpcomingArtists = ({ songsData }) => {
+const UpcomingArtists = ({ artistData }) => {
     const { data, isFetching, error } = useGetTopChartsQuery();
 
     if (isFetching) return <Loader title="Loading artists..." />;
+
+    console.log(artistData)
 
     // if (error) return <Error />;
 
@@ -16,7 +18,7 @@ const UpcomingArtists = ({ songsData }) => {
             <h2 className="font-bold text-3xl text-white text-left mt-4 mb-10">Upcoming artists</h2>
 
             <div className="flex flex-wrap sm:justify-start justify-center gap-8">
-                {songsData?.map((track, i) => <ArtistCard key={i} track={track} />)}
+                {artistData?.map((artist, i) => <ArtistCard key={i} artist={artist} />)}
             </div>
         </div>
     );
