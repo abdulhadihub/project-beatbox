@@ -31,7 +31,7 @@ const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
 
         // Check if a new image file was uploaded
         if (imageUpload) {
-            const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+            const imageRef = ref(storage, `images/songs/${imageUpload.name + v4()}`);
             await uploadBytes(imageRef, imageUpload);
             imageURL = await getDownloadURL(imageRef);
         }

@@ -24,7 +24,7 @@ const AddNewSong = ({ userData }) => {
         const musicRef = ref(storage, `music/${musicUpload.name + v4()}}`);
         const musicUploadTask = uploadBytes(musicRef, musicUpload);
 
-        const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+        const imageRef = ref(storage, `images/songs/${imageUpload.name + v4()}`);
         const imageUploadTask = uploadBytes(imageRef, imageUpload);
 
         Promise.all([musicUploadTask, imageUploadTask]).then(async () => {

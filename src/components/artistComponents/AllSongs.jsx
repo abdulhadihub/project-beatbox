@@ -64,7 +64,7 @@ const AllSongs = ({ userData }) => {
     useEffect(() => {
         if (imageUpload !== null) {
             setLoading(true);
-            const imageRef = ref(storage, `images/artistImages/${imageUpload.name + v4()}`);
+            const imageRef = ref(storage, `images/artists/${imageUpload.name + v4()}`);
             const imageUploadTask = uploadBytes(imageRef, imageUpload);
 
             Promise.all([imageUploadTask]).then(async () => {

@@ -37,7 +37,7 @@ const Register = ({ loginUser }) => {
                 data = {
                     email: user.email,
                     name: fullName,
-                    points: 1,
+                    points: 2000,
                     giftCards: [
                         {
                             couponCode: couponCodes[0],
