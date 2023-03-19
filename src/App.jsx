@@ -112,6 +112,7 @@ const App = () => {
 
 
   if (!(user)) return <Landing loginUser={loginUser} />;
+
   if (isFetchingData || !userData) return <Loader title="Loading User" />;
   const shouldRenderAudioPlayer = !isArtist;
 

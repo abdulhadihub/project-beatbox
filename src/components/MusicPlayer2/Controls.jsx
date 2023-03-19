@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from '../../firebase-config'
 import { PointsContext } from '../context/PointsContext';
@@ -38,7 +38,7 @@ const Controls = ({
   const [volume, setVolume] = useState(60);
   const [muteVolume, setMuteVolume] = useState(false);
   const [timer, setTimer] = useState(0);
-  const [points, setPoints] = useState(user?.points);
+  const { points, setPoints } = useContext(PointsContext);
 
   const togglePlayPause = () => {
     setIsPlaying((prev) => !prev);
@@ -85,9 +85,22 @@ const Controls = ({
   }, [audioRef, muteVolume]);
 
   useEffect(() => {
-    setPoints(prev => prev + 1);
-    updatePointsFireStore(user, points);
-    console.log("Congratulations! You have earned " + points + " points");
+    const delay = 5000; // debounce delay in milliseconds
+    let timerId = null;
+
+    if (timer > 0) {
+      timerId = setTimeout(() => {
+        setPoints(prev => prev + 1);
+        updatePointsFireStore(user, points);
+        // console.log("Congratulations! You have earned " + points + " points");
+      }, delay);
+    }
+
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
   }, [timer]);
 
 

@@ -13,8 +13,6 @@ const Rewards = ({ userData }) => {
         setPoints(points);
     };
 
-
-
     if (false) return <Loader title="Loading artists..." />;
 
     // if (error) return <Error />;
