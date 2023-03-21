@@ -3,6 +3,8 @@ import './index.css'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase-config';
 import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ loginUser }) => {
     const [user, setUser] = useState({});
@@ -25,14 +27,16 @@ const Login = ({ loginUser }) => {
             const user = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
             navigate('/')
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message, {
+                position: "top-center",
+            });
         }
     }
 
 
     return (
         <div className='custom_container'>
-
+            <ToastContainer />
             <div className='right'>
                 <h1 className="text-xl font-bold mb-3">Weclome to BeatBox</h1>
 

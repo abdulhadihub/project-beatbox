@@ -5,6 +5,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from '../../firebase-config'
 import { v4 } from 'uuid';
 import Loader from '../Loader';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddNewSong = ({ userData }) => {
     const [title, setTitle] = useState('')
@@ -17,7 +19,9 @@ const AddNewSong = ({ userData }) => {
 
     const handleSubmit = async () => {
         if (imageUpload === null || musicUpload === null) {
-            alert('Please upload a cover art and song')
+            toast('Please upload a cover art and song', {
+                position: toast.POSITION.TOP_CENTER
+            })
             return;
         }
         setLoading(true);
@@ -49,18 +53,23 @@ const AddNewSong = ({ userData }) => {
             });
 
             setLoading(false);
-            alert('Song added successfully');
+            toast.success('Song added successfully', {
+                position: toast.POSITION.TOP_CENTER
+            });
             window.location.reload();
         }
         catch (e) {
             setLoading(false);
-            alert("Error adding song: ", e);
+            toast.error("Error adding song: ", e, {
+                position: toast.POSITION.TOP_CENTER
+            });
         }
     }
 
     return (
 
         <div>
+            <ToastContainer />
             {loading && <Loader title={"Uploading"} />}
             <div className='grid grid-cols-2 gap-4 mt-6'>
                 <h3 className='text-lg font-bold'>Welcome <span className='text-violet-800'>{artistName}</span>, you can add more songs below</h3>

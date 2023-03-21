@@ -16,6 +16,9 @@ import { getApp } from 'firebase/app'
 import { getFirestore } from "firebase/firestore";
 import { PointsContext } from './components/context/PointsContext';
 import { SongContext } from './components/context/SongContext';
+import { giftcard } from './assets';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const App = () => {
@@ -62,7 +65,7 @@ const App = () => {
       setSongsData(songsData);
       setArtistData(artistData);
     } catch (error) {
-      console.error(error);
+      toast.error(error);
       setIsFetchingData(false);
       return null;
     }
@@ -92,11 +95,15 @@ const App = () => {
         const data = { ...docSnapListener.data(), ...docSnapArtist.data() }
         setUserData({ ...data, uid: user.uid });
       } else {
-        alert("No such Data!");
+        toast.error("No such Data!", {
+          position: "top-center",
+        });
         const navigate = useNavigate();
         navigate('/login')
       }
-    }).catch((error) => alert(error.message));
+    }).catch((error) => toast.error(error.message, {
+      position: "top-center",
+    }));
     setIsFetchingData(false);
   }
 
@@ -114,8 +121,10 @@ const App = () => {
   const shouldRenderAudioPlayer = !isArtist;
 
   return (
+
     <SongContext.Provider value={{ trackIndex, setTrackIndex, isPlaying, setIsPlaying }}>
       <PointsContext.Provider value={{ points, setPoints }}>
+        <ToastContainer />
         <div className="relative flex">
           <Sidebar isArtist={isArtist} />
           <div className={`flex-1 flex flex-col ${isArtist ? 'bg-slate-200' : 'bg-gradient-to-br from-[#49a09d] to-[#5f2c82]'}`}>

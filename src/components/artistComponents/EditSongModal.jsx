@@ -6,6 +6,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "fire
 import { storage } from '../../firebase-config'
 import { v4 } from 'uuid';
 import Loader from '../Loader';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
     const [showModal, setShowModal] = useState(false);
@@ -55,18 +57,23 @@ const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
             };
             await updateDoc(artistRef, { songs: updatedSongs });
             setLoading(false);
-            alert("Song updated successfully");
+            toast.success("Song updated successfully", {
+                position: "top-center",
+            });
             closeModal();
             window.location.reload();
         } catch (e) {
             setLoading(false);
-            alert("Error updating song: ", e);
+            toast.error("Error updating song: ", e, {
+                position: "top-center",
+            });
         }
     };
 
 
     return (
         <>
+            <ToastContainer />
             <button class=" text-cyan-300 hover:text-cyan-600 font-bold mx-6" onClick={editSong} ><BiPencil size={30} /></button>
             {showModal && (
 

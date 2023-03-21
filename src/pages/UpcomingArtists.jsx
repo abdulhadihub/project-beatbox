@@ -9,8 +9,6 @@ const UpcomingArtists = ({ artistData }) => {
 
     if (isFetching) return <Loader title="Loading artists..." />;
 
-    console.log(artistData)
-
     // if (error) return <Error />;
 
     return (

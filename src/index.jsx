@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 
 import './index.css';
 import App from './App';
-
 import './components/MusicPlayer2/musicPlayerStyles/customize-progress-bar.css';
 import './components/MusicPlayer2/musicPlayerStyles/index.css';
 import { store } from './redux/store';

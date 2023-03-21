@@ -4,6 +4,8 @@ import 'tw-elements';
 import { collection, addDoc, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../firebase-config'
 import Modal from '../components/Modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i }) {
 
@@ -26,7 +28,9 @@ function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i 
             });
         }
         catch (e) {
-            alert("Error updating points: ", e);
+            toast.error("Error updating points: ", e, {
+                position: "top-center",
+            });
         }
     }
 
@@ -35,6 +39,7 @@ function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i 
 
     return (
         <>
+            <ToastContainer />
             <div className=" w-1/5 group relative hover:shadow-lg">
 
                 <img className={cardClass} alt='gift_card_image' src={cardImage} />

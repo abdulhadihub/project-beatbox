@@ -6,6 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 import { db } from '../../firebase-config'
 import voucher_codes from 'voucher-code-generator';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = ({ loginUser }) => {
     const [user, setUser] = useState({});
@@ -84,7 +86,9 @@ const Register = ({ loginUser }) => {
                 await setDoc(doc(db, "listener", user.uid), data);
             }
         } catch (e) {
-            alert("Error adding document: ", e);
+            toast.error("Error adding document: ", e, {
+                position: "top-center",
+            });
         }
     }
 
@@ -104,7 +108,9 @@ const Register = ({ loginUser }) => {
             addUser(user.user);
             navigate('/');
         } catch (error) {
-            alert(error.message)
+            toast.error(error.message, {
+                position: "top-center",
+            })
         }
     }
 
@@ -114,7 +120,7 @@ const Register = ({ loginUser }) => {
 
     return (
         <div className='custom_container'>
-
+            <ToastContainer />
             <div className='right'>
                 <h1 className="text-xl font-bold mb-3">Weclome to BeatBox</h1>
                 <label className='text-left '>Full Name</label>

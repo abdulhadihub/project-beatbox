@@ -9,6 +9,8 @@ import { storage } from '../../firebase-config'
 import Loader from '../Loader';
 import EditSongModal from './EditSongModal';
 import { v4 } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const AllSongs = ({ userData }) => {
@@ -50,12 +52,16 @@ const AllSongs = ({ userData }) => {
             });
 
             setLoading(false);
-            alert('Song deleted successfully');
+            toast.success('Song deleted successfully', {
+                position: "top-center"
+            });
             window.location.reload();
         }
         catch (e) {
             setLoading(false);
-            alert("Error deleting song: ", e);
+            toast.error("Error deleting song: ", e, {
+                position: "top-center"
+            });
         }
     };
 
@@ -75,11 +81,15 @@ const AllSongs = ({ userData }) => {
 
                     await updateDoc(artistRef, { image: imageURL });
                     setLoading(false);
-                    alert("Profile image updated successfully");
+                    toast.success("Profile image updated successfully", {
+                        position: "top-center"
+                    });
                     window.location.reload();
                 } catch (e) {
                     setLoading(false);
-                    alert("Error updating profile image: ", e);
+                    toast.error("Error updating profile image: ", e, {
+                        position: "top-center"
+                    });
                 }
             });
         }
@@ -96,6 +106,7 @@ const AllSongs = ({ userData }) => {
     if (!userData) {
         return (
             <div class="grid grid-cols-3 gap-2 items-center mt-6">
+                <ToastContainer />
                 <div class="col-span-1">
                     {userData && (
                         <img class="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
@@ -117,6 +128,7 @@ const AllSongs = ({ userData }) => {
 
     return (
         <div>
+            <ToastContainer />
             {loading && <Loader title={"Updating"} />}
             <div class="grid grid-cols-3 gap-2 items-center mt-6">
                 <div class="col-span-1">

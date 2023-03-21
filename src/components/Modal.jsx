@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireStore, updatePoints }) {
   const [showModal, setShowModal] = useState(false);
 
@@ -11,7 +12,9 @@ function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireSto
       setShowModal(true);
     }
     else {
-      alert("You don't have enough points to redeem this gift card")
+      toast("You do not have enough points to redeem this gift card", {
+        position: toast.POSITION.TOP_CENTER
+      });
       return;
     }
   }
@@ -30,6 +33,7 @@ function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireSto
 
   return (
     <>
+      <ToastContainer />
       <button onClick={handleButtonClick} className={cardBtn}>
         Redeem
       </button>
