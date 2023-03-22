@@ -39,7 +39,7 @@ function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i 
 
     return (
         <>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             <div className=" w-1/5 group relative hover:shadow-lg">
 
                 <img className={cardClass} alt='gift_card_image' src={cardImage} />
