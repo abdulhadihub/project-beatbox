@@ -105,81 +105,107 @@ const AllSongs = ({ userData }) => {
         navigate("/addSong");
     }
 
-    if (!userData) {
+    const Header = () => {
         return (
-            <div className="grid grid-cols-3 gap-2 items-center mt-6">
+            <>
                 <ToastContainer />
-                <div className="col-span-1">
-                    {userData && (
-                        <img className="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
-                    )}
+                {loading && <Loader title={"Updating"} />}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mt-6">
+                    <div className="col-span-1 md:col-span-1">
+                        {userData && (
+                            <img
+                                className="w-50 h-60 object-cover"
+                                src={userData?.image}
+                                alt={`${userData.name}'s banner`}
+                            />
+                        )}
+                    </div>
+                    <h3 className="col-span-1 md:col-span-1 text-lg font-bold text-center mt-4 md:mt-0 max-w-xs md:max-w-full">
+                        Welcome{" "}
+                        <span className="text-violet-800">{artistName}</span>, here's the
+                        list of the songs uploaded
+                    </h3>
+                    <div className="col-span-1 md:col-span-1 flex flex-col md:flex-row mt-4 md:mt-0">
+                        <button className="w-full max-w-xs md:max-w-none bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded mb-2 md:mb-0 md:mr-2" onClick={handleClick}>
+                            Add New Song
+                        </button>
+                        <button className="w-full max-w-xs md:max-w-none bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>
+                            Change Profile Image
+                        </button>
+                        <input
+                            ref={artistInputRef}
+                            onChange={(e) => setImageUpload(e.target.files[0])}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                        />
+                    </div>
                 </div>
-                <h3 className="col-span-1 text-lg font-bold text-center">Welcome <span className="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
-                <div className="col-span-1 flex justify-center">
-                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
-                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
-                    <input ref={artistInputRef} onChange={(e) => setImageUpload(e.target.files[0])} type='file' accept="image/*" className='hidden' />
-
-                </div>
-            </div>
+            </>
         )
-            ;
     }
 
-
+    if (!userData) {
+        return (
+            <Header />
+        );
+    }
 
     return (
-        <div>
-            <ToastContainer />
-            {loading && <Loader title={"Updating"} />}
-            <div className="grid grid-cols-3 gap-2 items-center mt-6">
-                <div className="col-span-1">
-                    {userData && (
-                        <img className="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
-                    )}
-                </div>
-                <h3 className="col-span-1 text-lg font-bold text-center">Welcome <span className="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
-                <div className="col-span-1 flex justify-center">
-                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
-                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
-                    <input ref={artistInputRef} onChange={(e) => setImageUpload(e.target.files[0])} type='file' accept="image/*" className='hidden' />
-
-                </div>
-            </div>
-
-            <div>
-                <table className="table-auto w-full mt-6">
-                    <thead className='border-b-2 border-t-2 border-gray-300'>
+        <div className='flex flex-col'>
+            <Header />
+            <div className="overflow-x-auto overflow-y-auto max-w-[330px] md:max-w-full">
+                <table className="table-auto md:table-auto md:w-full mt-6">
+                    <thead className="border-b-2 border-t-2 border-gray-300">
                         <tr>
-                            <th className='text-center text-black-400 p-6'>Title</th>
-                            <th className='text-center text-black-400'>Audio</th>
-                            <th className='text-center text-black-400'>Cover Art</th>
-                            <th className='text-center text-black-400'>Date Added</th>
-                            <th className='text-center text-black-400'></th>
+                            <th className="text-center text-black-400 p-6">Title</th>
+                            <th className="text-center text-black-400">Audio</th>
+                            <th className="text-center text-black-400">Cover Art</th>
+                            <th className="text-center text-black-400">Date Added</th>
+                            <th className="text-center text-black-400"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {songs && Array.isArray(songs) && songs.map((song, index) => (
-                            <tr key={index}>
-                                <td className='text-center py-3 border-b-2 border-gray-400 p-2'>{song?.title}</td>
-                                <td className='text-center py-3 border-b-2 border-gray-400 p-2'><audio className='mx-auto' src={song?.music} controls /></td>
-                                <td className='text-center py-3 border-b-2 border-gray-400 p-2'><img className='h-[70px] w-[70px] mx-auto' src={song?.coverArt} alt="cover_art" /></td>
-                                <td className='text-center py-3 border-b-2 border-gray-400 p-2'>{song?.date}</td>
-                                <td className='text-center py-3 border-b-2 border-gray-400 p-2'>
-                                    <EditSongModal song={song} i={index} userData={userData} setLoading={setLoading} />
-
-                                    <button onClick={() => deleteSong(index)} className="text-red-500 hover:text-red-300 font-bold mx-6"><MdOutlineDeleteOutline size={30} /></button>
-                                </td>
-                            </tr>
-                        ))}
+                        {songs &&
+                            Array.isArray(songs) &&
+                            songs.map((song, index) => (
+                                <tr key={index}>
+                                    <td className="text-center py-3 border-b-2 border-gray-400 p-2">
+                                        {song?.title}
+                                    </td>
+                                    <td className="text-center py-3 border-b-2 border-gray-400 p-2">
+                                        <audio className="mx-auto" src={song?.music} controls />
+                                    </td>
+                                    <td className="text-center py-3 border-b-2 border-gray-400 p-2">
+                                        <img
+                                            className="h-[70px] w-[70px] mx-auto"
+                                            src={song?.coverArt}
+                                            alt="cover_art"
+                                        />
+                                    </td>
+                                    <td className="text-center py-3 border-b-2 border-gray-400 p-2">
+                                        {song?.date}
+                                    </td>
+                                    <td className="text-center py-3 border-b-2 border-gray-400 p-2">
+                                        <EditSongModal
+                                            song={song}
+                                            i={index}
+                                            userData={userData}
+                                            setLoading={setLoading}
+                                        />
+                                        <button
+                                            onClick={() => deleteSong(index)}
+                                            className="text-red-500 hover:text-red-300 font-bold mx-6"
+                                        >
+                                            <MdOutlineDeleteOutline size={30} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
-
-
-
             </div>
         </div>
     )
 }
-
 export default AllSongs
