@@ -76,7 +76,7 @@ const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
     return (
         <>
             <ToastContainer />
-            <button class=" text-cyan-300 hover:text-cyan-600 font-bold mx-6" onClick={editSong} ><BiPencil size={30} /></button>
+            <button className=" text-cyan-300 hover:text-cyan-600 font-bold mx-6" onClick={editSong} ><BiPencil size={30} /></button>
             {showModal && (
 
                 <div className="fixed z-10 inset-0 overflow-y-auto">

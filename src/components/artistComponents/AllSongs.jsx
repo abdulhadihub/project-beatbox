@@ -107,17 +107,17 @@ const AllSongs = ({ userData }) => {
 
     if (!userData) {
         return (
-            <div class="grid grid-cols-3 gap-2 items-center mt-6">
+            <div className="grid grid-cols-3 gap-2 items-center mt-6">
                 <ToastContainer />
-                <div class="col-span-1">
+                <div className="col-span-1">
                     {userData && (
-                        <img class="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
+                        <img className="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
                     )}
                 </div>
-                <h3 class="col-span-1 text-lg font-bold text-center">Welcome <span class="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
-                <div class="col-span-1 flex justify-center">
-                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
-                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
+                <h3 className="col-span-1 text-lg font-bold text-center">Welcome <span className="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
+                <div className="col-span-1 flex justify-center">
+                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
+                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
                     <input ref={artistInputRef} onChange={(e) => setImageUpload(e.target.files[0])} type='file' accept="image/*" className='hidden' />
 
                 </div>
@@ -132,23 +132,23 @@ const AllSongs = ({ userData }) => {
         <div>
             <ToastContainer />
             {loading && <Loader title={"Updating"} />}
-            <div class="grid grid-cols-3 gap-2 items-center mt-6">
-                <div class="col-span-1">
+            <div className="grid grid-cols-3 gap-2 items-center mt-6">
+                <div className="col-span-1">
                     {userData && (
-                        <img class="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
+                        <img className="w-50 h-60 object-cover" src={userData?.image} alt={`${userData.name}'s banner`} />
                     )}
                 </div>
-                <h3 class="col-span-1 text-lg font-bold text-center">Welcome <span class="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
-                <div class="col-span-1 flex justify-center">
-                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
-                    <button class="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
+                <h3 className="col-span-1 text-lg font-bold text-center">Welcome <span className="text-violet-800">{artistName}</span>, here's the list of the songs uploaded</h3>
+                <div className="col-span-1 flex justify-center">
+                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={handleClick}>Add New Song</button>
+                    <button className="w-full max-w-xs bg-cyan-500 hover:bg-cyan-600 p-2 px-5 text-black font-bold rounded" onClick={changeArtistImage}>Change Profile Image</button>
                     <input ref={artistInputRef} onChange={(e) => setImageUpload(e.target.files[0])} type='file' accept="image/*" className='hidden' />
 
                 </div>
             </div>
 
             <div>
-                <table class="table-auto w-full mt-6">
+                <table className="table-auto w-full mt-6">
                     <thead className='border-b-2 border-t-2 border-gray-300'>
                         <tr>
                             <th className='text-center text-black-400 p-6'>Title</th>
@@ -168,7 +168,7 @@ const AllSongs = ({ userData }) => {
                                 <td className='text-center py-3 border-b-2 border-gray-400 p-2'>
                                     <EditSongModal song={song} i={index} userData={userData} setLoading={setLoading} />
 
-                                    <button onClick={() => deleteSong(index)} class="text-red-500 hover:text-red-300 font-bold mx-6"><MdOutlineDeleteOutline size={30} /></button>
+                                    <button onClick={() => deleteSong(index)} className="text-red-500 hover:text-red-300 font-bold mx-6"><MdOutlineDeleteOutline size={30} /></button>
                                 </td>
                             </tr>
                         ))}

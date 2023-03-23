@@ -10,6 +10,7 @@ import MusicPlayer from './MusicPlayer';
 import Loader from './Loader';
 import Error from './Error';
 import Modal from './Modal';
+import ResetPassword from './ResetPassword';
 
 export {
   TopPlay,
@@ -24,4 +25,5 @@ export {
   Loader,
   Error,
   Modal,
+  ResetPassword,
 };

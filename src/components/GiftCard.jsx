@@ -9,8 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i }) {
 
-
-
     const updatePointsFireStore = async (user, points, index) => {
         try {
             const userRef = doc(db, "listener", user.uid);

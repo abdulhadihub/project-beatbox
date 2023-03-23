@@ -54,9 +54,9 @@ const App = () => {
               <div className="px-6 h-[calc(100vh)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
                 <div className="flex-1 h-fit pb-40">
                   <Routes>
-                    <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} />} />
+                    <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} isFetchingSongsData={isFetchingSongsData} />} />
                     <Route path="/login" element={<Landing loginUser={loginUser} />} />
-                    <Route path="/upcoming-artists" element={<UpcomingArtists artistData={artistData} />} />
+                    <Route path="/upcoming-artists" element={<UpcomingArtists artistData={artistData} isFetchingSongsData={isFetchingSongsData} />} />
                     <Route path="/rewards" element={<Rewards userData={userData} />} />
                     <Route path="/account" element={<Account isArtist={isArtist} />} />
                     <Route path="/logout" element={<Logout />} />

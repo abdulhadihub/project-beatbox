@@ -1,13 +1,9 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-
 import PlayPause from './PlayPause';
-import { playPause, setActiveSong } from '../redux/features/playerSlice';
 import { SongContext } from '../components/context/SongContext';
 
-const SongCard = ({ song, activeSong, datajson, i }) => {
-  const dispatch = useDispatch();
+const SongCard = ({ song, i }) => {
   const { trackIndex, setTrackIndex } = useContext(SongContext);
   const { isPlaying, setIsPlaying } = useContext(SongContext);
 

@@ -1,25 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useContext } from 'react';
-import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from '../../firebase-config'
 import { PointsContext } from '../context/PointsContext';
 import { SongContext } from '../context/SongContext';
-
-// icons
-import {
-  IoPlayBackSharp,
-  IoPlayForwardSharp,
-  IoPlaySkipBackSharp,
-  IoPlaySkipForwardSharp,
-  IoPlaySharp,
-  IoPauseSharp,
-} from 'react-icons/io5';
-
-import {
-  IoMdVolumeHigh,
-  IoMdVolumeOff,
-  IoMdVolumeLow,
-} from 'react-icons/io';
-
 
 import { FaPlay, FaPause, FaFastBackward, FaFastForward, FaStepBackward, FaStepForward, FaVolumeDown, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 

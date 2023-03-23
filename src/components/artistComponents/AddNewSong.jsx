@@ -90,7 +90,7 @@ const AddNewSong = ({ userData }) => {
                     <input onChange={(e) => setImageUpload(e.target.files[0])} style={{ color: 'black', background: 'transparent', outline: 'none' }} type='file' accept="image/*" className='text-black w-full border-2 border-gray-300 rounded p-2 mt-2' />
                 </div>
 
-                <button class="bg-cyan-500 hover:bg-cyan-600 mt-3 px-6 py-2 rounded text-white font-bold" onClick={handleSubmit}>ADD NEW SONG</button>
+                <button className="bg-cyan-500 hover:bg-cyan-600 mt-3 px-6 py-2 rounded text-white font-bold" onClick={handleSubmit}>ADD NEW SONG</button>
             </div>
         </div>
     )
