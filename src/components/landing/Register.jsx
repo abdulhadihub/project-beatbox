@@ -129,7 +129,7 @@ const Register = ({ loginUser }) => {
                 <input onChange={(event) => { setRegisterEmail(event.target.value) }} type="email" placeholder='Enter your Email' />
                 <label>Password</label>
                 <input onChange={(event) => { setRegisterPassword(event.target.value) }} type="password" placeholder='Enter your Password' />
-                <span className="text-sm font-bold text-purple-800">
+                <span className="text-sm font-bold text-purple-800 ">
                     <input className="mr-2 leading-tight checkbox" type="checkbox" onChange={handleCheck} />
                     Register as an Artist
                 </span>
