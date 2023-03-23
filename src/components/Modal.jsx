@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserDataContext } from './context/UserDataContext';
+
+
+
 function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireStore, updatePoints }) {
   const [showModal, setShowModal] = useState(false);
+  const { fetchUserData } = useContext(UserDataContext);
 
   const handleButtonClick = () => {
     if (points >= cost) {
@@ -28,7 +33,7 @@ function Modal({ cardBtn, couponCode, points, cost, user, i, updatePointsFireSto
 
   const handleClose = () => {
     setShowModal(false);
-    window.location.reload();
+    fetchUserData(user);
   }
 
   return (

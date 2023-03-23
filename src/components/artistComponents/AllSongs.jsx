@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { BiPencil } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 import { useNavigate } from "react-router-dom";
@@ -11,12 +11,14 @@ import EditSongModal from './EditSongModal';
 import { v4 } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserDataContext } from '../context/UserDataContext';
 
 
 const AllSongs = ({ userData }) => {
     const [songs, setSongs] = useState([]);
     const [imageUpload, setImageUpload] = useState(null);
     const artistInputRef = useRef(null);
+    const { fetchUserData } = useContext(UserDataContext);
 
     useEffect(() => {
         if (userData?.songs) {
@@ -55,7 +57,7 @@ const AllSongs = ({ userData }) => {
             toast.success('Song deleted successfully', {
                 position: "top-center"
             });
-            window.location.reload();
+            fetchUserData(userData);
         }
         catch (e) {
             setLoading(false);
@@ -84,7 +86,7 @@ const AllSongs = ({ userData }) => {
                     toast.success("Profile image updated successfully", {
                         position: "top-center"
                     });
-                    window.location.reload();
+                    fetchUserData(userData);
                 } catch (e) {
                     setLoading(false);
                     toast.error("Error updating profile image: ", e, {

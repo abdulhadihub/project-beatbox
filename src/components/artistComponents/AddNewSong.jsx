@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { db } from '../../firebase-config'
 import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -7,6 +7,7 @@ import { v4 } from 'uuid';
 import Loader from '../Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserDataContext } from '../context/UserDataContext';
 
 const AddNewSong = ({ userData }) => {
     const [title, setTitle] = useState('')
@@ -15,6 +16,7 @@ const AddNewSong = ({ userData }) => {
     const artistName = userData?.name;
     const storage = getStorage();
     const [loading, setLoading] = useState(false);
+    const { fetchUserData } = useContext(UserDataContext);
 
 
     const handleSubmit = async () => {
@@ -56,7 +58,7 @@ const AddNewSong = ({ userData }) => {
             toast.success('Song added successfully', {
                 position: toast.POSITION.TOP_CENTER
             });
-            window.location.reload();
+            fetchUserData(userData);
         }
         catch (e) {
             setLoading(false);

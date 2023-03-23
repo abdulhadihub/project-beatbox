@@ -25,7 +25,7 @@ const Rewards = ({ userData }) => {
             <h2 className="font-bold text-2xl text-blue text-left">{name}</h2>
             <h2 className="font-bold text-2xl text-white text-left mb-10">with your {points} points you can redeem</h2>
 
-            <div className="flex flex-wrap flex-row sm:justify-start justify-center gap-8 mt-10">
+            <div className="flex flex-wrap sm:justify-start justify-center gap-8 mt-10">
 
                 {userData.giftCards?.map((giftCard, i) => (
                     <GiftCard

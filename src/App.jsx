@@ -16,22 +16,25 @@ import { getApp } from 'firebase/app'
 import { getFirestore } from "firebase/firestore";
 import { PointsContext } from './components/context/PointsContext';
 import { SongContext } from './components/context/SongContext';
+import { UserDataContext } from './components/context/UserDataContext';
 import { giftcard } from './assets';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useUserData } from './customHooks';
 
 
 const App = () => {
   const { activeSong } = useSelector((state) => state.player);
   const [user, setUser] = useState(null);
   const [song, setSong] = useState(null);
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [songsData, setSongsData] = useState([]);
   const [points, setPoints] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
   const [artistData, setArtistData] = useState([]);
+  const [userData, isFetchingUserData, fetchUserData] = useUserData();
 
   const loginUser = (userInfo) => {
     setUser(userInfo);
@@ -81,35 +84,10 @@ const App = () => {
     setPoints(userData?.points);
   }, [userData]);
 
-  const getUser = async (user) => {
-    setIsFetchingData(true);
-    const docRefListener = doc(db, "listener", user.uid);
-    const docSnapListener = await getDoc(docRefListener);
-
-    const docRefArtist = doc(db, "artist", user.uid);
-    const docSnapArtist = await getDoc(docRefArtist);
-
-    Promise.all([docSnapListener, docSnapArtist]).then(() => {
-
-      if (docSnapListener.exists() || docSnapArtist.exists()) {
-        const data = { ...docSnapListener.data(), ...docSnapArtist.data() }
-        setUserData({ ...data, uid: user.uid });
-      } else {
-        toast.error("No such Data!", {
-          position: "top-center",
-        });
-        const navigate = useNavigate();
-        navigate('/login')
-      }
-    }).catch((error) => toast.error(error.message, {
-      position: "top-center",
-    }));
-    setIsFetchingData(false);
-  }
 
   useEffect(() => {
     if (user) {
-      getUser(user);
+      fetchUserData(user);
     }
   }, [user]);
   const isArtist = userData?.points === undefined;
@@ -117,53 +95,55 @@ const App = () => {
 
   if (!(user)) return <Landing loginUser={loginUser} />;
 
-  if (isFetchingData || !userData) return <Loader title="Loading User" />;
+  if (isFetchingUserData || !userData) return <Loader title="Loading User" />;
   const shouldRenderAudioPlayer = !isArtist;
 
   return (
 
-    <SongContext.Provider value={{ trackIndex, setTrackIndex, isPlaying, setIsPlaying }}>
-      <PointsContext.Provider value={{ points, setPoints }}>
-        <ToastContainer />
-        <div className="relative flex">
-          <Sidebar isArtist={isArtist} />
-          <div className={`flex-1 flex flex-col ${isArtist ? 'bg-slate-200' : 'bg-gradient-to-br from-[#49a09d] to-[#5f2c82]'}`}>
-            {/* <Searchbar /> */}
+    <UserDataContext.Provider value={{ userData, isFetchingUserData, fetchUserData }}>
+      <SongContext.Provider value={{ trackIndex, setTrackIndex, isPlaying, setIsPlaying }}>
+        <PointsContext.Provider value={{ points, setPoints }}>
+          <ToastContainer />
+          <div className="relative flex">
+            <Sidebar isArtist={isArtist} />
+            <div className={`flex-1 flex flex-col ${isArtist ? 'bg-slate-200' : 'bg-gradient-to-br from-[#49a09d] to-[#5f2c82]'}`}>
+              {/* <Searchbar /> */}
 
-            <div className="px-6 h-[calc(100vh)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
-              <div className="flex-1 h-fit pb-40">
-                <Routes>
-                  <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} />} />
-                  <Route path="/login" element={<Landing loginUser={loginUser} />} />
-                  <Route path="/upcoming-artists" element={<UpcomingArtists artistData={artistData} />} />
-                  <Route path="/rewards" element={<Rewards userData={userData} />} />
-                  <Route path="/account" element={<Account isArtist={isArtist} />} />
-                  <Route path="/logout" element={<Logout />} />
-                  <Route path="/addSong" element={<ArtistAddSong userData={userData} />} />
-                  <Route path="/top-artists" element={<TopArtists />} />
-                  <Route path="/top-charts" element={<TopCharts />} />
-                  <Route path="/around-you" element={<AroundYou />} />
-                  <Route path="/artists/:id" element={<ArtistDetails />} />
-                  <Route path="/songs/:songid" element={<SongDetails />} />
-                  <Route path="/search/:searchTerm" element={<Search />} />
-                </Routes>
-              </div>
-              <div className="xl:sticky relative top-0 h-fit">
-                {/* <TopPlay /> */}
+              <div className="px-6 h-[calc(100vh)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
+                <div className="flex-1 h-fit pb-40">
+                  <Routes>
+                    <Route path="/" element={isArtist ? <ArtistDashboard userData={userData} /> : <Discover songsData={songsData} />} />
+                    <Route path="/login" element={<Landing loginUser={loginUser} />} />
+                    <Route path="/upcoming-artists" element={<UpcomingArtists artistData={artistData} />} />
+                    <Route path="/rewards" element={<Rewards userData={userData} />} />
+                    <Route path="/account" element={<Account isArtist={isArtist} />} />
+                    <Route path="/logout" element={<Logout />} />
+                    <Route path="/addSong" element={<ArtistAddSong userData={userData} />} />
+                    <Route path="/top-artists" element={<TopArtists />} />
+                    <Route path="/top-charts" element={<TopCharts />} />
+                    <Route path="/around-you" element={<AroundYou />} />
+                    <Route path="/artists/:id" element={<ArtistDetails />} />
+                    <Route path="/songs/:songid" element={<SongDetails />} />
+                    <Route path="/search/:searchTerm" element={<Search />} />
+                  </Routes>
+                </div>
+                <div className="xl:sticky relative top-0 h-fit">
+                  {/* <TopPlay /> */}
+                </div>
               </div>
             </div>
-          </div>
-          {shouldRenderAudioPlayer && (
-            <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
-              <AudioPlayer songsData={songsData} isFetchingData={isFetchingData} user={userData} />
-              {/* <MusicPlayer /> */}
-            </div>
-          )}
-          {/* {activeSong?.title && (
+            {shouldRenderAudioPlayer && (
+              <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
+                <AudioPlayer songsData={songsData} isFetchingData={isFetchingData} user={userData} />
+                {/* <MusicPlayer /> */}
+              </div>
+            )}
+            {/* {activeSong?.title && (
       )} */}
-        </div>
-      </PointsContext.Provider>
-    </SongContext.Provider>
+          </div>
+        </PointsContext.Provider>
+      </SongContext.Provider>
+    </UserDataContext.Provider>
   );
 };
 

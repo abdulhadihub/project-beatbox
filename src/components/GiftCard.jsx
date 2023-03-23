@@ -43,9 +43,10 @@ function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i 
             <div className=" w-1/5 group relative hover:shadow-lg">
 
                 <img className={cardClass} alt='gift_card_image' src={cardImage} />
-                <h2 class={"text-lg font-bold text-white mb-2 text-center"}>{`${cost} points`}</h2>
+                <h2 className={"text-lg font-bold text-white mb-2 text-center"}>{`${cost} points`}</h2>
                 <Modal cardBtn={cardBtn} couponCode={couponCode} points={points} cost={cost} user={user} i={i} updatePointsFireStore={updatePointsFireStore} updatePoints={updatePoints} />
             </div>
+
         </>
     )
 }

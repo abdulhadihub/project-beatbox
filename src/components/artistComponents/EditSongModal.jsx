@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BiPencil } from 'react-icons/bi'
 import { db } from '../../firebase-config'
 import { collection, addDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
@@ -8,6 +8,7 @@ import { v4 } from 'uuid';
 import Loader from '../Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserDataContext } from '../context/UserDataContext';
 
 const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
     const [showModal, setShowModal] = useState(false);
@@ -15,6 +16,7 @@ const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
     const [imageUpload, setImageUpload] = useState(null);
     const [musicUpload, setMusicUpload] = useState(null);
     const storage = getStorage();
+    const { fetchUserData } = useContext(UserDataContext);
 
     const editSong = () => {
         setShowModal(true);
@@ -61,7 +63,7 @@ const EditSongModal = ({ song, updateSong, i, userData, setLoading }) => {
                 position: "top-center",
             });
             closeModal();
-            window.location.reload();
+            fetchUserData(userData);
         } catch (e) {
             setLoading(false);
             toast.error("Error updating song: ", e, {
