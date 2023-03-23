@@ -1,114 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import { Searchbar, Sidebar, MusicPlayer, TopPlay, Loader } from './components';
-import { ArtistDetails, TopArtists, AroundYou, Discover, Search, SongDetails, TopCharts, Rewards, Account, Logout } from './pages';
+import { Route, Routes } from 'react-router-dom';
+import { Sidebar, Loader } from './components';
+import { Discover, Rewards, Account, Logout } from './pages';
 import UpcomingArtists from './pages/UpcomingArtists';
 import AudioPlayer from './components/MusicPlayer2/AudioPlayer';
 import ArtistDashboard from './components/artistComponents/AllSongs'
 import ArtistAddSong from './components/artistComponents/AddNewSong'
 import Landing from './pages/Landing'
-import Login from './components/landing/Login'
-import Register from './components/landing/Register'
-import { db } from './firebase-config'
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
-import { getApp } from 'firebase/app'
-import { getFirestore } from "firebase/firestore";
 import { PointsContext } from './components/context/PointsContext';
 import { SongContext } from './components/context/SongContext';
 import { UserDataContext } from './components/context/UserDataContext';
-import { giftcard } from './assets';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useUserData } from './customHooks';
-
+import { useUserData, useSongsData } from './customHooks';
 
 const App = () => {
-  const { activeSong } = useSelector((state) => state.player);
   const [user, setUser] = useState(null);
-  const [song, setSong] = useState(null);
-  // const [userData, setUserData] = useState(null);
-  const [isFetchingData, setIsFetchingData] = useState(false);
-  const [songsData, setSongsData] = useState([]);
   const [points, setPoints] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
-  const [artistData, setArtistData] = useState([]);
   const [userData, isFetchingUserData, fetchUserData] = useUserData();
+  const { songsData, artistData, isFetchingSongsData, getSongsData } = useSongsData();
 
   const loginUser = (userInfo) => {
     setUser(userInfo);
   };
 
-  const getSongsData = async () => {
-    setIsFetchingData(true);
-
-    try {
-      const artistSnapshot = await getDocs(collection(db, "artist"));
-      const songsData = [];
-      const artistData = [];
-
-      artistSnapshot.forEach((doc) => {
-        const artist = doc.data();
-        const artistName = artist.name;
-        const artistImage = artist.image;
-        artistData.push({ name: artistName, image: artistImage });
-
-        if (Array.isArray(artist.songs)) {
-          artist.songs.forEach((song) => {
-            if (song) {
-              const songWithArtistName = { ...song, artist: artistName };
-              songsData.push(songWithArtistName);
-            }
-          });
-        }
-      });
-
-      setIsFetchingData(false);
-      setSongsData(songsData);
-      setArtistData(artistData);
-    } catch (error) {
-      toast.error(error);
-      setIsFetchingData(false);
-      return null;
-    }
-  };
-
   useEffect(() => {
     getSongsData();
-
   }, []);
 
   useEffect(() => {
-
     setPoints(userData?.points);
   }, [userData]);
-
 
   useEffect(() => {
     if (user) {
       fetchUserData(user);
     }
   }, [user]);
+
   const isArtist = userData?.points === undefined;
-
-
   if (!(user)) return <Landing loginUser={loginUser} />;
-
-  if (isFetchingUserData || !userData) return <Loader title="Loading User" />;
+  if (isFetchingUserData || isFetchingSongsData || !userData) return <Loader title="Loading User" />;
   const shouldRenderAudioPlayer = !isArtist;
 
   return (
-
     <UserDataContext.Provider value={{ userData, isFetchingUserData, fetchUserData }}>
       <SongContext.Provider value={{ trackIndex, setTrackIndex, isPlaying, setIsPlaying }}>
         <PointsContext.Provider value={{ points, setPoints }}>
-          <ToastContainer />
           <div className="relative flex">
             <Sidebar isArtist={isArtist} />
             <div className={`flex-1 flex flex-col ${isArtist ? 'bg-slate-200' : 'bg-gradient-to-br from-[#49a09d] to-[#5f2c82]'}`}>
-              {/* <Searchbar /> */}
-
               <div className="px-6 h-[calc(100vh)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
                 <div className="flex-1 h-fit pb-40">
                   <Routes>
@@ -119,27 +61,17 @@ const App = () => {
                     <Route path="/account" element={<Account isArtist={isArtist} />} />
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/addSong" element={<ArtistAddSong userData={userData} />} />
-                    <Route path="/top-artists" element={<TopArtists />} />
-                    <Route path="/top-charts" element={<TopCharts />} />
-                    <Route path="/around-you" element={<AroundYou />} />
-                    <Route path="/artists/:id" element={<ArtistDetails />} />
-                    <Route path="/songs/:songid" element={<SongDetails />} />
-                    <Route path="/search/:searchTerm" element={<Search />} />
                   </Routes>
                 </div>
                 <div className="xl:sticky relative top-0 h-fit">
-                  {/* <TopPlay /> */}
                 </div>
               </div>
             </div>
             {shouldRenderAudioPlayer && (
               <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
-                <AudioPlayer songsData={songsData} isFetchingData={isFetchingData} user={userData} />
-                {/* <MusicPlayer /> */}
+                <AudioPlayer songsData={songsData} isFetchingData={isFetchingSongsData} user={userData} />
               </div>
             )}
-            {/* {activeSong?.title && (
-      )} */}
           </div>
         </PointsContext.Provider>
       </SongContext.Provider>

@@ -1,3 +1,4 @@
-import useUserData from './getUserDataCustomHook';
+import useUserData from './useUserData';
+import useSongsData from './useSongsData';
 
-export { useUserData, };
+export { useUserData, useSongsData };

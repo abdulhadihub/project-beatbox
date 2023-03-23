@@ -22,7 +22,8 @@ const NavLinks = ({ isArtist, handleClick }) => {
   }
   else {
     links = [
-      { name: 'Account', to: '/', icon: HiOutlineUser },
+      { name: 'Dashboard', to: '/', icon: HiOutlineHome },
+      { name: 'Account', to: '/account', icon: HiOutlineUser },
       { name: 'Logout', to: '/logout', icon: HiOutlineLogout },
     ];
   }
