@@ -1,7 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { Error, Loader, SongCard } from '../components';
+import { Loader, SongCard } from '../components';
 
 const Discover = ({ songsData, isFetchingSongsData }) => {
 

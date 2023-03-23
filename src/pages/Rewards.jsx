@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Error, Loader } from '../components';
+import React, { useContext } from 'react';
 import GiftCard from '../components/GiftCard';
 import { PointsContext } from '../components/context/PointsContext';
 
@@ -12,11 +11,6 @@ const Rewards = ({ userData }) => {
     const updatePoints = (points) => {
         setPoints(points);
     };
-
-    if (false) return <Loader title="Loading artists..." />;
-
-    // if (error) return <Error />;
-
 
     return (
         <div className="flex flex-col">

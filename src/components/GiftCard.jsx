@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import cardImage from '../assets/giftcard.webp'
 import 'tw-elements';
-import { collection, addDoc, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../firebase-config'
 import Modal from '../components/Modal';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i }) {
@@ -37,7 +37,6 @@ function GiftCard({ cost, isRedeemed, couponCode, points, updatePoints, user, i 
 
     return (
         <>
-            {/* <ToastContainer /> */}
             <div className=" w-[250px] md:w-1/5 group relative hover:shadow-lg">
 
                 <img className={cardClass} alt='gift_card_image' src={cardImage} />
