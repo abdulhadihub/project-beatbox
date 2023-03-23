@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import { BiPencil } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 import { useNavigate } from "react-router-dom";
 import { db } from '../../firebase-config'
-import { collection, addDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { getStorage, ref, deleteObject, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
+import { ref, deleteObject, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from '../../firebase-config'
 import Loader from '../Loader';
 import EditSongModal from './EditSongModal';
@@ -28,8 +27,6 @@ const AllSongs = ({ userData }) => {
 
     const [loading, setLoading] = useState(false);
     const artistName = userData?.name;
-
-
 
     const deleteSong = async (index) => {
         const song = userData.songs[index];

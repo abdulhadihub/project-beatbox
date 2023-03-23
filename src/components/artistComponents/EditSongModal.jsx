@@ -1,11 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { BiPencil } from 'react-icons/bi'
 import { db } from '../../firebase-config'
-import { collection, addDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { storage } from '../../firebase-config'
+import { doc, updateDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from 'uuid';
-import Loader from '../Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserDataContext } from '../context/UserDataContext';
