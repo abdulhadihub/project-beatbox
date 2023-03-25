@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArtistCard, Error, Loader } from '../components';
+import { ArtistCard, Loader } from '../components';
 
 const UpcomingArtists = ({ artistData, isFetchingSongsData }) => {
 

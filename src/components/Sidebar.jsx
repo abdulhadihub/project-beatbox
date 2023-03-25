@@ -15,9 +15,6 @@ const NavLinks = ({ isArtist, handleClick }) => {
       { name: 'Rewards', to: '/rewards', icon: HiOutlineGift },
       { name: 'Account', to: '/account', icon: HiOutlineUser },
       { name: 'Logout', to: '/logout', icon: HiOutlineLogout },
-      // { name: 'Around You', to: '/around-you', icon: HiOutlinePhotograph },
-      // { name: 'Top Artists', to: '/top-artists', icon: HiOutlineUserGroup },
-      // { name: 'Top Charts', to: '/top-charts', icon: HiOutlineHashtag },
     ];
   }
   else {
